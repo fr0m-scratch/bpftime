@@ -55,9 +55,28 @@ build: ## build the package with test and all components
 	cmake -Bbuild -DBPFTIME_ENABLE_UNIT_TESTING=1 -DBUILD_BPFTIME_DAEMON=1 -DCMAKE_BUILD_TYPE:STRING=Debug
 	cmake --build build --config Debug  -j$(JOBS)
 
-build-iouring: ## build the package with iouring extension
-	cmake -Bbuild -DBPFTIME_ENABLE_IOURING_EXT=1 -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo
-	cmake --build build --config RelWithDebInfo  -j$(JOBS)
+build-iouring: ## build the package with io_uring and all helper support
+	cmake -Bbuild \
+		-DBPFTIME_ENABLE_IOURING_EXT=1 \
+		-DBUILD_BPFTIME_DAEMON=1 \
+		-DBPFTIME_ENABLE_UNIT_TESTING=1 \
+		-DENABLE_PROBE_WRITE_CHECK=1 \
+		-DENABLE_PROBE_READ_CHECK=1 \
+		-DSPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_INFO
+		-DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo
+	cmake --build build --config RelWithDebInfo  --target install -j$(JOBS)
+
+uring-debug: ## build the package with io_uring and all helper support
+	cmake -Bbuild \
+		-DBPFTIME_ENABLE_IOURING_EXT=1 \
+		-DBUILD_BPFTIME_DAEMON=1 \
+		-DBPFTIME_ENABLE_UNIT_TESTING=1 \
+		-DENABLE_PROBE_WRITE_CHECK=1 \
+		-DENABLE_PROBE_READ_CHECK=1 \
+		-DSPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE \
+		-DCMAKE_BUILD_TYPE:STRING=Debug
+	cmake --build build --config Debug  --target install -j$(JOBS)
+
 
 build-wo-libbpf: ## build the package with iouring extension
 	cmake -Bbuild -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DBPFTIME_BUILD_WITH_LIBBPF=OFF -DBPFTIME_BUILD_KERNEL_BPF=OFF

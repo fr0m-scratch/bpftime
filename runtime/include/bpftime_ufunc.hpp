@@ -9,16 +9,33 @@
 #define EXTENDED_HELPER_PATH_JOIN_ID 1004
 
 #define EXTENDED_UFUNC_IOURING_INIT 1006
-#define EXTENDED_UFUNC_IOURING_SUBMIT_WRITE 1007
-#define EXTENDED_UFUNC_IOURING_SUBMIT_FSYNC 1008
 #define EXTENDED_UFUNC_IOURING_WAIT_AND_SEEN 1009
 #define EXTENDED_UFUNC_IOURING_SUBMIT 1010
+#define EXTENDED_UFUNC_IOURING_READ 1011
+#define EXTENDED_UFUNC_IOURING_WRITE 1013
+#define EXTENDED_UFUNC_IOURING_READV 1014
+#define EXTENDED_UFUNC_IOURING_WRITEV 1015
+#define EXTENDED_UFUNC_IOURING_RECV 1016
+#define EXTENDED_UFUNC_IOURING_SEND_ZC 1017
+
+#define EXTENDED_UFUNC_IOURING_PROVIDE_LINK 1027
+#define EXTENDED_UFUNC_IOURING_READ_BG 1028
+#define EXTENDED_UFUNC_IOURING_CMD_NVME_RD 1031
+#define EXTENDED_UFUNC_GET_LBA 1032
+
+#define EXTENDED_UFUNC_FUTEX_WAIT 1033
+#define EXTENDED_UFUNC_FUTEX_WAKE 1034
+
+#define EXT_UFUNC_IOURING_INIT_EXTREME 1050
+
+#define EXTENDED_UFUNC_XDP_SETUP 1100
 
 namespace bpftime
 {
 constexpr const size_t MAX_FUNC_NAME_LEN = 64;
 constexpr const size_t MAX_ARGS_COUNT = 6;
 constexpr const size_t MAX_UFUNC_FUNCS = 8192 * 4;
+
 enum ufunc_types {
 	UFUNC_TYPE_UNKNOWN,
 	UFUNC_TYPE_VOID,
@@ -69,7 +86,7 @@ uint64_t from_arg_val(enum ufunc_types type, union arg_val val);
 // register a ufunc for a program
 void bpftime_ufunc_register_ufunc(uint64_t id, ebpf_ufunc_func_info func_info);
 
-// register a ufunc for a program base on info.
+// register a ufunc for a program based on info.
 // probe ctx will find the function address and fill in the func_info
 int bpftime_ufunc_resolve_from_info(ebpf_ufunc_func_info func_info,
 				    void *(*function_resolver)(const char *));
